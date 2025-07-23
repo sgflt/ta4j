@@ -27,6 +27,7 @@ import org.ta4j.core.MultiTimeFrameSeries
 import org.ta4j.core.api.callback.MarketEventHandler
 import org.ta4j.core.api.series.BarBuilderFactory
 import org.ta4j.core.api.series.BarSeries
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.backtest.strategy.runtime.NOOPRuntimeContext
 import org.ta4j.core.indicators.IndicatorChangeListener
 import org.ta4j.core.indicators.IndicatorContextUpdateListener
@@ -42,7 +43,7 @@ import org.ta4j.core.trading.LiveBarSeries
  * This class is usable for persistence of calculated indicators.
  */
 class ObservableIndicatorCalculationBuilder {
-    private var name: String = UNNAMED_SERIES_NAME
+    private var symbol: Symbol = Symbol(UNNAMED_SERIES_NAME)
     private var numFactory = defaultNumFactory
     private var barBuilderFactory: BarBuilderFactory = LightweightBarBuilderFactory()
     private var indicatorContexts: IndicatorContexts = IndicatorContexts.empty()
@@ -65,8 +66,8 @@ class ObservableIndicatorCalculationBuilder {
      *
      * @return `this`
      */
-    fun withName(name: String) = apply {
-        this.name = name
+    fun withSymbol(symbol: Symbol) = apply {
+        this.symbol = symbol
     }
 
 
@@ -112,7 +113,7 @@ class ObservableIndicatorCalculationBuilder {
 
     private fun createSeriesPerTimeFrame(timeFrame: TimeFrame): LiveBarSeries {
         return LiveBarSeries(
-            name = name,
+            symbol = symbol,
             timeFrame = timeFrame,
             numFactory = numFactory,
             barBuilderFactory = barBuilderFactory,
@@ -122,7 +123,7 @@ class ObservableIndicatorCalculationBuilder {
     }
 
     companion object {
-        /** The [.name] for an unnamed bar series.  */
+        /** The [.symbol] for an unnamed bar series.  */
         private const val UNNAMED_SERIES_NAME = "unnamed_series"
         val log = LoggerFactory.getLogger(ObservableIndicatorCalculationBuilder::class.java)
     }

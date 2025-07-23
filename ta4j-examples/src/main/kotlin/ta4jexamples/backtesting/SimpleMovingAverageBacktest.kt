@@ -149,7 +149,7 @@ private class TwoDaySMAStrategyFactory : StrategyFactory<Strategy> {
             timeFrames = setOf(TimeFrame.DAY),
             entryRule = createEntryRule(indicatorContext),
             exitRule = createExitRule(indicatorContext),
-            indicatorContext = indicatorContext
+            indicatorContexts = indicatorContexts
         )
     }
 
@@ -191,7 +191,7 @@ private class ThreeDaySMAStrategyFactory : StrategyFactory<Strategy> {
             timeFrames = setOf(TimeFrame.DAY),
             entryRule = createEntryRule(indicatorContext),
             exitRule = createExitRule(indicatorContext),
-            indicatorContext = indicatorContext
+            indicatorContexts = indicatorContexts
         )
     }
 

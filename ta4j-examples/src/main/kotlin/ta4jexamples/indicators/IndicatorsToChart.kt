@@ -40,6 +40,7 @@ import org.jfree.data.time.TimeSeries
 import org.jfree.data.time.TimeSeriesCollection
 import org.ta4j.core.api.Indicators
 import org.ta4j.core.api.callback.MarketEventHandler
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.events.CandleReceived
 import org.ta4j.core.indicators.IndicatorContext
 import org.ta4j.core.indicators.IndicatorContext.IndicatorIdentification
@@ -103,7 +104,7 @@ class IndicatorsToChart(
 
     private fun setupIndicatorContexts(): IndicatorContexts {
         val contexts = IndicatorContexts.empty().apply {
-            add(IndicatorContext.empty(timeFrame))
+            add(IndicatorContext.empty(timeFrame = timeFrame))
         }
         
         val indicatorContext = contexts[timeFrame]
@@ -131,7 +132,7 @@ class IndicatorsToChart(
         return contexts
     }
 
-    override fun onContextUpdate(time: Instant) {
+    override fun onContextUpdate(symbol: Symbol, time: Instant) {
         // Ensure idempotency - only process each time once
         if (time.isAfter(lastUpdateTime)) {
             lastUpdateTime = time

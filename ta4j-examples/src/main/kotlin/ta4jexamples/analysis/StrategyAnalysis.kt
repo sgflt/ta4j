@@ -187,7 +187,7 @@ private class MovingMomentumStrategyFactory : StrategyFactory<Strategy> {
             timeFrames = setOf(TimeFrame.DAY),
             entryRule = createEntryRule(indicatorContext),
             exitRule = createExitRule(indicatorContext),
-            indicatorContext = indicatorContext
+            indicatorContexts = indicatorContexts
         )
     }
 

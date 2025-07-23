@@ -35,7 +35,7 @@ import org.ta4j.core.utils.TimeFrameMapping
 class MarketEventTestContext {
     lateinit var marketEvents: Queue<MarketEvent>
         private set
-    private val indicatorContext: IndicatorContext = IndicatorContext.empty(TimeFrame.DAY)
+    private val indicatorContext: IndicatorContext = IndicatorContext.empty(timeFrame = TimeFrame.DAY)
 
 
     var barSeries: BacktestBarSeries =

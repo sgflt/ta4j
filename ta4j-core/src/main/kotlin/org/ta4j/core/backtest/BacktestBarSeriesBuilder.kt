@@ -23,6 +23,7 @@
 package org.ta4j.core.backtest
 
 import org.ta4j.core.api.series.BarBuilderFactory
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.indicators.IndicatorContext
 import org.ta4j.core.indicators.TimeFrame
 import org.ta4j.core.num.NumFactory
@@ -32,11 +33,14 @@ import org.ta4j.core.num.NumFactoryProvider.defaultNumFactory
  * A builder to build a new [BacktestBarSeries].
  */
 class BacktestBarSeriesBuilder {
-    private var name = "UNDEFINED"
+    private var symbol = Symbol("UNDEFINED")
     private var numFactory = defaultNumFactory
     private var barBuilderFactory: BarBuilderFactory = BacktestBarBuilderFactory()
     private var timeFrame: TimeFrame = TimeFrame.DAY
-    private var indicatorContext: IndicatorContext = IndicatorContext.empty(this.timeFrame)
+    private var indicatorContext: IndicatorContext = IndicatorContext.empty(
+        symbol = symbol,
+        timeFrame = timeFrame
+    )
 
 
     /**
@@ -58,8 +62,8 @@ class BacktestBarSeriesBuilder {
      *
      * @return `this`
      */
-    fun withName(name: String): BacktestBarSeriesBuilder {
-        this.name = name
+    fun withSymbol(name: Symbol): BacktestBarSeriesBuilder {
+        this.symbol = name
         return this
     }
 
@@ -69,7 +73,7 @@ class BacktestBarSeriesBuilder {
      */
     fun withTimeFrame(timeFrame: TimeFrame): BacktestBarSeriesBuilder {
         this.timeFrame = timeFrame
-        this.indicatorContext = IndicatorContext.empty(timeFrame)
+        this.indicatorContext = IndicatorContext.empty(symbol = symbol, timeFrame = timeFrame)
         return this
     }
 
@@ -97,11 +101,11 @@ class BacktestBarSeriesBuilder {
 
     fun build(): BacktestBarSeries {
         return BacktestBarSeries(
-            this.name,
-            this.timeFrame,
-            this.numFactory,
-            this.barBuilderFactory,
-            listOf(this.indicatorContext)
+            symbol,
+            timeFrame,
+            numFactory,
+            barBuilderFactory,
+            listOf(indicatorContext)
         )
     }
 }

@@ -29,6 +29,7 @@ import java.io.FileWriter
 import java.time.Instant
 import org.ta4j.core.api.Indicators
 import org.ta4j.core.api.callback.MarketEventHandler
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.events.CandleReceived
 import org.ta4j.core.indicators.IndicatorContext
 import org.ta4j.core.indicators.IndicatorContext.IndicatorIdentification
@@ -92,7 +93,7 @@ class IndicatorsToCsv(
 
     private fun setupIndicatorContexts(): IndicatorContexts {
         val contexts = IndicatorContexts.empty().apply {
-            add(IndicatorContext.empty(timeFrame))
+            add(IndicatorContext.empty(timeFrame = timeFrame))
         }
 
         val indicatorContext = contexts[timeFrame]
@@ -146,7 +147,7 @@ class IndicatorsToCsv(
         }
     }
 
-    override fun onContextUpdate(time: Instant) {
+    override fun onContextUpdate(symbol: Symbol, time: Instant) {
         // Ensure idempotency - only process each time once
         if (time.isAfter(lastUpdateTime)) {
             lastUpdateTime = time

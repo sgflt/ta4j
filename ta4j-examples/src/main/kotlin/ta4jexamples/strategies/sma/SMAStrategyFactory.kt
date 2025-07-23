@@ -61,7 +61,7 @@ class SMAStrategyFactory(private val timeFrame: TimeFrame) : StrategyFactory<Str
             setOf(timeFrame),
             entryRule,
             exitRule,
-            indicatorContext
+            indicatorContexts
         )
     }
 }

@@ -23,11 +23,12 @@
 package org.ta4j.core.indicators
 
 import kotlin.collections.Map.Entry
+import org.ta4j.core.api.series.Symbol
 
 /**
  * Aggregation class that stores indicator contexts related to defined timeframes.
  */
-class IndicatorContexts private constructor() : Iterable<Entry<TimeFrame, IndicatorContext>> {
+class IndicatorContexts private constructor(val symbol: Symbol) : Iterable<Entry<TimeFrame, IndicatorContext>> {
     private val timeFramedContexts = HashMap<TimeFrame, IndicatorContext>()
 
     override fun iterator(): Iterator<Entry<TimeFrame, IndicatorContext>> = timeFramedContexts.entries.iterator()
@@ -38,7 +39,7 @@ class IndicatorContexts private constructor() : Iterable<Entry<TimeFrame, Indica
 
 
     operator fun get(timeFrame: TimeFrame): IndicatorContext {
-        return timeFramedContexts.computeIfAbsent(timeFrame) { IndicatorContext.empty(it) }
+        return timeFramedContexts.computeIfAbsent(timeFrame) { IndicatorContext.empty(symbol, it) }
     }
 
     fun register(changeListener: IndicatorChangeListener) {
@@ -59,7 +60,10 @@ class IndicatorContexts private constructor() : Iterable<Entry<TimeFrame, Indica
     val isEmpty: Boolean
         get() = timeFramedContexts.isEmpty()
 
+    val isStable: Boolean
+        get() = all { it.value.isStable }
+
     companion object {
-        fun empty() = IndicatorContexts()
+        fun empty(symbol: Symbol = Symbol("UNDEFINED")) = IndicatorContexts(symbol)
     }
 }

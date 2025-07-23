@@ -24,6 +24,7 @@ package ta4jexamples.strategies.sma
 
 import java.time.Instant
 import org.ta4j.core.TradeType
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.backtest.criteria.NumberOfPositionsCriterion
 import org.ta4j.core.backtest.criteria.pnl.ReturnCriterion
 import org.ta4j.core.backtest.strategy.BackTestTradingRecord
@@ -46,7 +47,7 @@ object LiveTradingExample {
             BackTestTradingRecord(TradeType.BUY, "Live Trading", numFactory = nf)
 
         val liveTrading = LiveTradingBuilder()
-            .withName("Live Trading Example")
+            .withSymbol(Symbol("Live Trading Example"))
             .withStrategyFactory(SMAStrategyFactory(timeFrame))
             .withConfiguration(StrategyConfiguration())
             .build()

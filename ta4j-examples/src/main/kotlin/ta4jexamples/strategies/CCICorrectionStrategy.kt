@@ -140,7 +140,7 @@ private class CCICorrectionStrategyFactory : StrategyFactory<Strategy> {
             timeFrames = setOf(TimeFrame.DAY),
             entryRule = createEntryRule(indicatorContext, upperThreshold, lowerThreshold),
             exitRule = createExitRule(indicatorContext, upperThreshold, lowerThreshold),
-            indicatorContext = indicatorContext
+            indicatorContexts = indicatorContexts
         )
     }
 

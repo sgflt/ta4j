@@ -142,7 +142,7 @@ private class ADXStrategyFactory : StrategyFactory<Strategy> {
             timeFrames = setOf(TimeFrame.DAY),
             entryRule = createEntryRule(indicatorContext, adxThreshold),
             exitRule = createExitRule(indicatorContext, adxThreshold),
-            indicatorContext = indicatorContext
+            indicatorContexts = indicatorContexts
         )
     }
 

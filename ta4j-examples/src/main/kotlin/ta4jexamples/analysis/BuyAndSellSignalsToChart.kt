@@ -26,6 +26,7 @@ package ta4jexamples.analysis
 import java.time.Instant
 import org.ta4j.core.api.Indicators
 import org.ta4j.core.api.callback.MarketEventHandler
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.events.CandleReceived
 import org.ta4j.core.indicators.IndicatorContext
 import org.ta4j.core.indicators.IndicatorContext.IndicatorIdentification
@@ -40,9 +41,9 @@ import org.ta4j.core.strategy.configuration.StrategyConfiguration
 import org.ta4j.core.trading.live.LiveTrading
 import org.ta4j.core.trading.live.LiveTradingBuilder
 import org.ta4j.core.trading.preparation.ObservableIndicatorCalculationBuilder
-import org.ta4j.core.trading.signal.BuySignal
+import org.ta4j.core.trading.signal.EntrySignal
+import org.ta4j.core.trading.signal.ExitSignal
 import org.ta4j.core.trading.signal.ObservableStrategyFactoryBuilder
-import org.ta4j.core.trading.signal.SellSignal
 import org.ta4j.core.trading.signal.Signal
 import org.ta4j.core.trading.signal.SignalListener
 import ta4jexamples.loaders.MockMarketEventsLoader
@@ -62,9 +63,10 @@ class BuyAndSellSignalsToChart(
     private val marketEventHandler: MarketEventHandler
     private lateinit var liveTrading: LiveTrading
     private val chartRenderer = ChartRenderer(enableLiveUpdates)
-    
+
     @Volatile
     private var lastUpdateTime: Instant = Instant.MIN
+    private val symbol = Symbol("BTC/USD")
 
     init {
         indicatorContexts = setupIndicatorContexts()
@@ -76,7 +78,7 @@ class BuyAndSellSignalsToChart(
 
     private fun setupIndicatorContexts(): IndicatorContexts {
         val contexts = IndicatorContexts.empty().apply {
-            add(IndicatorContext.empty(timeFrame))
+            add(IndicatorContext.empty(symbol, timeFrame))
         }
 
         val indicatorContext = contexts[timeFrame]
@@ -95,11 +97,11 @@ class BuyAndSellSignalsToChart(
         liveTrading = LiveTradingBuilder()
             .withStrategyFactory(observableFactory)
             .withIndicatorContexts(indicatorContexts)
-            .withName("BuyAndSellSignalsChart")
+            .withSymbol(symbol)
             .build()
     }
 
-    override fun onContextUpdate(time: Instant) {
+    override fun onContextUpdate(symbol: Symbol, time: Instant) {
         if (time.isAfter(lastUpdateTime)) {
             lastUpdateTime = time
             updatePriceData(time)
@@ -116,11 +118,12 @@ class BuyAndSellSignalsToChart(
         }
 
         when (signal) {
-            is BuySignal -> {
+            is EntrySignal -> {
                 chartRenderer.addBuySignal(signal.whenReceived, currentPrice)
                 println("BUY Signal at ${signal.whenReceived} - Price: $currentPrice")
             }
-            is SellSignal -> {
+
+            is ExitSignal -> {
                 chartRenderer.addSellSignal(signal.whenReceived, currentPrice)
                 println("SELL Signal at ${signal.whenReceived} - Price: $currentPrice")
             }
@@ -180,7 +183,7 @@ class BuyAndSellSignalsToChart(
     fun getClosePriceSeries() = chartRenderer.getPriceSeriesCopy()
     fun getBuySignals() = chartRenderer.getBuySignals().map { it.time to it.price }
     fun getSellSignals() = chartRenderer.getSellSignals().map { it.time to it.price }
-    
+
     // Force chart update
     fun forceChartUpdate() = chartRenderer.forceUpdate()
 
@@ -224,7 +227,7 @@ class BuyAndSellSignalsToChart(
                         timeFrames = setOf(TimeFrame.DAY),
                         entryRule = entryCross.toRule(),
                         exitRule = exitCross.toRule(),
-                        indicatorContext = indicatorContext
+                        indicatorContexts = indicatorContexts
                     )
                 }
             }
@@ -255,7 +258,7 @@ class BuyAndSellSignalsToChart(
                         // Process events with progress - signals will appear in real-time with delay
                         // Use 50ms delay between events for visual effect (adjust as needed)
                         signalChart.processEventsWithProgress(marketEvents, showProgress = true, delayMs = 50)
-                        
+
                         // Force final chart update to ensure all data is visible
                         signalChart.forceChartUpdate()
 
@@ -283,11 +286,11 @@ class BuyAndSellSignalsToChart(
                         val priceDataPoints = signalChart.getClosePriceSeries().itemCount
                         val totalSignals = signalChart.getBuySignals().size + signalChart.getSellSignals().size
                         println("Displaying chart with $priceDataPoints data points and $totalSignals signals...")
-                        
+
                         if (priceDataPoints == 0) {
                             println("WARNING: No price data was processed! Check indicator setup.")
                         }
-                        
+
                         signalChart.displayChart()
                     }
                 }

@@ -22,7 +22,7 @@
  */
 package org.ta4j.core.strategy
 
-import org.ta4j.core.indicators.IndicatorContext
+import org.ta4j.core.indicators.IndicatorContexts
 import org.ta4j.core.indicators.TimeFrame
 
 @JvmRecord
@@ -31,8 +31,8 @@ data class DefaultStrategy(
     override val timeFrames: Set<TimeFrame>,
     override val entryRule: Rule,
     override val exitRule: Rule,
-    val indicatorContext: IndicatorContext,
+    val indicatorContexts: IndicatorContexts,
 ) : Strategy {
     override val isStable
-        get() = indicatorContext.isStable
+        get() = indicatorContexts.isStable
 }

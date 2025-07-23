@@ -29,6 +29,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.ta4j.core.TradeType
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.events.CandleReceived
 import org.ta4j.core.indicators.IndicatorContext
 import org.ta4j.core.indicators.IndicatorContext.IndicatorIdentification
@@ -56,7 +57,7 @@ class LiveTradingTest {
         // Create live trading instance
         val liveTrading = LiveTradingBuilder()
             .withNumFactory(numFactory)
-            .withName("LiveTrading")
+            .withSymbol(Symbol("BTC/USD"))
             .withStrategyFactory(TestSMAStrategyFactory(numFactory))
             .withConfiguration(configuration)
             .withIndicatorContexts(indicatorContexts)
@@ -148,7 +149,7 @@ class LiveTradingTest {
                 timeFrames = setOf(TimeFrame.DAY),
                 entryRule = createEntryRule(indicatorContext),
                 exitRule = createExitRule(indicatorContext),
-                indicatorContext = indicatorContext
+                indicatorContexts = indicatorContexts
             )
         }
 

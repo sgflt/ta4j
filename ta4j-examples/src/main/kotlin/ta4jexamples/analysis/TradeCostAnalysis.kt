@@ -159,7 +159,7 @@ private class ShortSellingMomentumStrategyFactory : StrategyFactory<Strategy> {
             timeFrames = setOf(TimeFrame.DAY),
             entryRule = shortOverLongRule,
             exitRule = shortUnderLongRule,
-            indicatorContext = indicatorContext
+            indicatorContexts = indicatorContexts
         )
     }
 

@@ -43,7 +43,7 @@ class OpenedPositionMinimumBarCountRuleTest {
     @BeforeEach
     fun setUp() {
         // Create indicator context with 1-minute timeframe
-        val minuteIndicatorContext = IndicatorContext.empty(TimeFrame.MINUTES_1)
+        val minuteIndicatorContext = IndicatorContext.empty(timeFrame = TimeFrame.MINUTES_1)
 
         // Create bar series with 1-minute timeframe
         val minuteBarSeries = BacktestBarSeriesBuilder()
@@ -158,7 +158,7 @@ class OpenedPositionMinimumBarCountRuleTest {
     @Test
     fun `should work with different timeframes`() {
         // Test with 5-minute timeframe
-        val fiveMinuteIndicatorContext = IndicatorContext.empty(TimeFrame.MINUTES_5)
+        val fiveMinuteIndicatorContext = IndicatorContext.empty(timeFrame = TimeFrame.MINUTES_5)
 
         val fiveMinuteBarSeries = BacktestBarSeriesBuilder()
             .withNumFactory(DecimalNumFactory.getInstance())

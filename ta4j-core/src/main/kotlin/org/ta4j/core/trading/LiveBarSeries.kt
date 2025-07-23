@@ -29,6 +29,7 @@ import org.ta4j.core.api.series.Bar
 import org.ta4j.core.api.series.BarBuilderFactory
 import org.ta4j.core.api.series.BarSeries
 import org.ta4j.core.api.series.PastCandleParadoxException
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.api.series.WrongTimeFrameException
 import org.ta4j.core.events.CandleReceived
 import org.ta4j.core.indicators.IndicatorContext
@@ -44,7 +45,7 @@ import org.ta4j.core.strategy.RuntimeContext
  * @author Lukáš Kvídera
  */
 internal class LiveBarSeries(
-    override val name: String,
+    override val symbol: Symbol,
     override val timeFrame: TimeFrame,
     override val numFactory: NumFactory,
     private val barBuilderFactory: BarBuilderFactory,

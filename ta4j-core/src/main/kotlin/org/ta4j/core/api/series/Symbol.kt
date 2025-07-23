@@ -21,25 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ta4j.core.trading.signal
+package org.ta4j.core.api.series
 
-import java.time.Instant
-import org.ta4j.core.api.series.Symbol
-
-interface Signal {
-    val symbol: Symbol
-    val whenReceived: Instant
-    val strategyName: String
-}
-
-data class EntrySignal(
-    override val symbol: Symbol,
-    override val whenReceived: Instant,
-    override val strategyName: String,
-) : Signal
-
-data class ExitSignal(
-    override val symbol: Symbol,
-    override val whenReceived: Instant,
-    override val strategyName: String,
-) : Signal
+@JvmInline
+value class Symbol(val name: String)

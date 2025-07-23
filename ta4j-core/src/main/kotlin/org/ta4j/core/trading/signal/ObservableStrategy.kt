@@ -24,6 +24,7 @@
 package org.ta4j.core.trading.signal
 
 import java.time.Instant
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.indicators.IndicatorContextUpdateListener
 import org.ta4j.core.strategy.Strategy
 
@@ -45,14 +46,14 @@ class ObservableStrategy(
         }
 
 
-    override fun onContextUpdate(time: Instant) {
+    override fun onContextUpdate(symbol: Symbol, time: Instant) {
         if (time.isAfter(lastCallTime)) {
             lastCallTime = time
 
             if (isStable && entryRule.isSatisfied) {
-                signalListeners.forEach { it.onSignal(BuySignal(time, name)) }
+                signalListeners.forEach { it.onSignal(EntrySignal(symbol, time, name)) }
             } else if (isStable && exitRule.isSatisfied) {
-                signalListeners.forEach { it.onSignal(SellSignal(time, name)) }
+                signalListeners.forEach { it.onSignal(ExitSignal(symbol, time, name)) }
             }
         }
     }

@@ -67,7 +67,7 @@ class BuyAndSellSignalsToChartTest {
                     timeFrames = setOf(TimeFrame.DAY),
                     entryRule = entryRule,
                     exitRule = exitRule,
-                    indicatorContext = indicatorContext
+                    indicatorContexts = indicatorContexts
                 )
             }
         }

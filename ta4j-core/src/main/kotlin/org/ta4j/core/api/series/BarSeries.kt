@@ -62,9 +62,9 @@ interface BarSeries {
     fun barBuilder(): BarBuilder
 
     /**
-     * @return the name of the series
+     * @return the name of underlying symbol
      */
-    val name: String
+    val symbol: Symbol
 
     /**
      * Gets the bar from series.

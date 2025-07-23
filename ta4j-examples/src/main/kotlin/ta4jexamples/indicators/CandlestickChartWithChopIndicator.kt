@@ -47,9 +47,9 @@ import org.jfree.data.time.TimeSeries
 import org.jfree.data.time.TimeSeriesCollection
 import org.jfree.data.xy.DefaultHighLowDataset
 import org.jfree.data.xy.OHLCDataset
-import org.jfree.data.xy.XYDataset
 import org.ta4j.core.api.Indicators
 import org.ta4j.core.api.callback.MarketEventHandler
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.events.CandleReceived
 import org.ta4j.core.indicators.IndicatorContext
 import org.ta4j.core.indicators.IndicatorContext.IndicatorIdentification
@@ -118,7 +118,7 @@ class CandlestickChartWithChopIndicator(
 
     private fun setupIndicatorContexts(): IndicatorContexts {
         val contexts = IndicatorContexts.empty().apply {
-            add(IndicatorContext.empty(timeFrame))
+            add(IndicatorContext.empty(timeFrame = timeFrame))
         }
         
         val indicatorContext = contexts[timeFrame]
@@ -134,7 +134,7 @@ class CandlestickChartWithChopIndicator(
         return contexts
     }
 
-    override fun onContextUpdate(time: Instant) {
+    override fun onContextUpdate(symbol: Symbol, time: Instant) {
         if (time.isAfter(lastUpdateTime)) {
             lastUpdateTime = time
             

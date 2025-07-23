@@ -155,7 +155,7 @@ private class RSI2StrategyFactory : StrategyFactory<Strategy> {
             timeFrames = setOf(TimeFrame.DAY),
             entryRule = createEntryRule(indicatorContext, rsiOversoldThreshold),
             exitRule = createExitRule(indicatorContext, rsiOverboughtThreshold),
-            indicatorContext = indicatorContext
+            indicatorContexts = indicatorContexts
         )
     }
 

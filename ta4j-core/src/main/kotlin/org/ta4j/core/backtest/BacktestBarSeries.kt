@@ -31,6 +31,7 @@ import org.ta4j.core.api.series.Bar
 import org.ta4j.core.api.series.BarBuilderFactory
 import org.ta4j.core.api.series.BarSeries
 import org.ta4j.core.api.series.PastCandleParadoxException
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.api.series.WrongTimeFrameException
 import org.ta4j.core.events.CandleReceived
 import org.ta4j.core.indicators.TimeFrame
@@ -45,8 +46,8 @@ import org.ta4j.core.num.NumFactory
  *
  */
 class BacktestBarSeries internal constructor(
-    /** The name of the bar series.  */
-    override val name: String,
+    /** The symbol of the bar series.  */
+    override val symbol: Symbol,
     override val timeFrame: TimeFrame,
     override val numFactory: NumFactory,
     barBuilderFactory: BarBuilderFactory,

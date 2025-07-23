@@ -28,6 +28,7 @@ import org.ta4j.core.MultiTimeFrameSeries
 import org.ta4j.core.aggregator.BarAggregator
 import org.ta4j.core.api.series.BarBuilderFactory
 import org.ta4j.core.api.series.BarSeries
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.backtest.strategy.runtime.NOOPRuntimeContext
 import org.ta4j.core.indicators.IndicatorContexts
 import org.ta4j.core.indicators.TimeFrame
@@ -46,7 +47,7 @@ import org.ta4j.core.trading.LiveBarSeries
  */
 class SignalTradingBuilder {
     private var windowSize: Int? = null
-    private var name = UNNAMED_SERIES_NAME
+    private var symbol = Symbol(UNNAMED_SERIES_NAME)
     private var numFactory = defaultNumFactory
     private var barBuilderFactory: BarBuilderFactory = LightweightBarBuilderFactory()
     private var strategyFactories = mutableListOf<StrategyFactory<Strategy>>()
@@ -55,23 +56,13 @@ class SignalTradingBuilder {
     private var configuration = StrategyConfiguration()
 
 
-    /**
-     * @param numFactory to set [BacktestBarSeries.numFactory]
-     *
-     * @return `this`
-     */
     fun withNumFactory(numFactory: NumFactory) = apply {
         this.numFactory = numFactory
     }
 
 
-    /**
-     * @param name to set [BacktestBarSeries.getName]
-     *
-     * @return `this`
-     */
-    fun withName(name: String) = apply {
-        this.name = name
+    fun withSymbol(symbol: Symbol) = apply {
+        this.symbol = symbol
     }
 
 
@@ -141,7 +132,7 @@ class SignalTradingBuilder {
 
     private fun createSeriesPerTimeFrame(timeFrame: TimeFrame): LiveBarSeries {
         return LiveBarSeries(
-            name = name,
+            symbol = symbol,
             timeFrame = timeFrame,
             numFactory = numFactory,
             barBuilderFactory = barBuilderFactory,

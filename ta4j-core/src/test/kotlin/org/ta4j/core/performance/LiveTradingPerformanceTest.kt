@@ -38,6 +38,7 @@ import org.openjdk.jmh.annotations.State
 import org.openjdk.jmh.annotations.Warmup
 import org.ta4j.core.MarketEventTestContext
 import org.ta4j.core.api.Indicators
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.events.CandleReceived
 import org.ta4j.core.indicators.IndicatorContext
 import org.ta4j.core.indicators.IndicatorContexts
@@ -67,7 +68,7 @@ open class LiveTradingPerformanceTest {
         val timeFrame = TimeFrame.MINUTES_1
         
         // Create indicator contexts
-        val indicatorContext = IndicatorContext.empty(timeFrame)
+        val indicatorContext = IndicatorContext.empty(timeFrame = timeFrame)
         val indicatorContexts = IndicatorContexts.empty()
         indicatorContexts.add(indicatorContext)
         
@@ -77,7 +78,7 @@ open class LiveTradingPerformanceTest {
         // Build LiveTrading using LiveTradingBuilder
         liveTrading = LiveTradingBuilder()
             .withNumFactory(numFactory)
-            .withName("PerformanceTest")
+            .withSymbol(Symbol("PerformanceTest"))
             .withIndicatorContexts(indicatorContexts)
             .withConfiguration(configuration)
             .build()
@@ -265,7 +266,7 @@ open class LiveTradingPerformanceTest {
         val numFactory = DoubleNumFactory
         val timeFrame = TimeFrame.MINUTES_1
         
-        val indicatorContext = IndicatorContext.empty(timeFrame)
+        val indicatorContext = IndicatorContext.empty(timeFrame = timeFrame)
         val indicatorContexts = IndicatorContexts.empty()
         indicatorContexts.add(indicatorContext)
         
@@ -273,7 +274,7 @@ open class LiveTradingPerformanceTest {
         
         return LiveTradingBuilder()
             .withNumFactory(numFactory)
-            .withName("PerformanceTestFresh")
+            .withSymbol(Symbol("PerformanceTestFresh"))
             .withIndicatorContexts(indicatorContexts)
             .withConfiguration(configuration)
             .build()

@@ -29,6 +29,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.num.NumFactory
 
 class BacktestBarSeriesTest {
@@ -86,13 +87,13 @@ class BacktestBarSeriesTest {
     @ParameterizedTest
     @MethodSource("org.ta4j.core.NumFactoryTestSource#numFactories")
     fun getNameTest(numFactory: NumFactory) {
-        val defaultName = "Series Name"
+        val defaultName = Symbol("BTC/USD")
         val series = BacktestBarSeriesBuilder()
             .withNumFactory(numFactory)
-            .withName(defaultName)
+            .withSymbol(defaultName)
             .build()
 
-        assertThat(series.name).isEqualTo(defaultName)
+        assertThat(series.symbol).isEqualTo(defaultName)
     }
 
     @ParameterizedTest
@@ -176,10 +177,10 @@ class BacktestBarSeriesTest {
     }
 
     private fun createDefaultSeries(numFactory: NumFactory): BacktestBarSeries {
-        val defaultName = "Series Name"
+        val defaultName = Symbol("BTC/USD")
         val series = BacktestBarSeriesBuilder()
             .withNumFactory(numFactory)
-            .withName(defaultName)
+            .withSymbol(defaultName)
             .build()
 
         // Add test data

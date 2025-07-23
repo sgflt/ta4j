@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory
 import org.ta4j.core.MultiTimeFrameSeries
 import org.ta4j.core.api.series.BarBuilderFactory
 import org.ta4j.core.api.series.BarSeries
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.backtest.strategy.runtime.NOOPRuntimeContext
 import org.ta4j.core.indicators.IndicatorContexts
 import org.ta4j.core.indicators.TimeFrame
@@ -44,7 +45,7 @@ import org.ta4j.core.trading.LiveBarSeries
  */
 class LiveTradingBuilder {
     private var windowSize: Int? = null
-    private var name: String = UNNAMED_SERIES_NAME
+    private var symbol = Symbol(UNNAMED_SERIES_NAME)
     private var numFactory = defaultNumFactory
     private var barBuilderFactory: BarBuilderFactory = LightweightBarBuilderFactory()
     private var strategyFactory: StrategyFactory<Strategy> = NOOPStrategyFactory()
@@ -53,30 +54,18 @@ class LiveTradingBuilder {
     private var configuration = StrategyConfiguration()
 
 
-    /**
-     * @param numFactory to set [BacktestBarSeries.numFactory]
-     *
-     * @return `this`
-     */
     fun withNumFactory(numFactory: NumFactory) = apply {
         this.numFactory = numFactory
     }
 
 
-    /**
-     * @param name to set [BacktestBarSeries.getName]
-     *
-     * @return `this`
-     */
-    fun withName(name: String) = apply {
-        this.name = name
+    fun withSymbol(symbol: Symbol) = apply {
+        this.symbol = symbol
     }
 
 
     /**
      * @param barBuilderFactory to build bars with the same datatype as series
-     *
-     * @return `this`
      */
     fun withBarBuilderFactory(barBuilderFactory: BarBuilderFactory) = apply {
         this.barBuilderFactory = barBuilderFactory
@@ -95,6 +84,7 @@ class LiveTradingBuilder {
 
     fun withIndicatorContexts(indicatorContexts: IndicatorContexts) = apply {
         this.indicatorContexts = indicatorContexts
+        symbol = indicatorContexts.symbol
     }
 
 
@@ -131,7 +121,7 @@ class LiveTradingBuilder {
 
     private fun createSeriesPerTimeFrame(timeFrame: TimeFrame): LiveBarSeries {
         return LiveBarSeries(
-            name = name,
+            symbol = symbol,
             timeFrame = timeFrame,
             numFactory = numFactory,
             barBuilderFactory = barBuilderFactory,
@@ -142,7 +132,7 @@ class LiveTradingBuilder {
 
     companion object {
         /** The [.name] for an unnamed bar series.  */
-        private const val UNNAMED_SERIES_NAME = "unnamed_series"
+        private const val UNNAMED_SERIES_NAME = "UNDEFINED"
         val log = LoggerFactory.getLogger(LiveTradingBuilder::class.java)
     }
 }

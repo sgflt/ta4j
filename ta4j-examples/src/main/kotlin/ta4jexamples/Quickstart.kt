@@ -25,6 +25,7 @@ package ta4jexamples
 
 import org.ta4j.core.TradeType
 import org.ta4j.core.api.Indicators
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.indicators.IndicatorContext
 import org.ta4j.core.indicators.IndicatorContext.IndicatorIdentification
 import org.ta4j.core.indicators.IndicatorContexts
@@ -53,7 +54,7 @@ object Quickstart {
 
         // Create live trading system with our SMA crossover strategy
         val liveTrading = LiveTradingBuilder()
-            .withName("BTC/USD Live Trading")
+            .withSymbol(Symbol("BTC/USD"))
             .withStrategyFactory(SMAStrategyFactory())
             .build()
 
@@ -130,7 +131,7 @@ private class SMAStrategyFactory : StrategyFactory<Strategy> {
             timeFrames = setOf(TimeFrame.DAY),
             entryRule = createEntryRule(indicatorContext),
             exitRule = createExitRule(indicatorContext),
-            indicatorContext = indicatorContext
+            indicatorContexts = indicatorContexts
         )
     }
 

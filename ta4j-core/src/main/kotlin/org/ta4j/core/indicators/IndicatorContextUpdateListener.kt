@@ -23,6 +23,7 @@
 package org.ta4j.core.indicators
 
 import java.time.Instant
+import org.ta4j.core.api.series.Symbol
 
 fun interface IndicatorContextUpdateListener {
     /**
@@ -30,5 +31,5 @@ fun interface IndicatorContextUpdateListener {
      *
      * If there are multiple timeframes, method may be called multiple times. Call have to be idempotent.
      */
-    fun onContextUpdate(time: Instant)
+    fun onContextUpdate(symbol: Symbol, time: Instant)
 }

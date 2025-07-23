@@ -81,7 +81,7 @@ class AITradingStrategyFactory(
             setOf(timeFrame),
             entryRule,
             exitRule,
-            indicatorContext
+            indicatorContexts
         )
     }
 

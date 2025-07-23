@@ -27,12 +27,14 @@ import kotlin.collections.Map.Entry
 import org.ta4j.core.api.Indicator
 import org.ta4j.core.api.callback.BarListener
 import org.ta4j.core.api.series.Bar
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.indicators.IndicatorContext.IndicatorIdentification
 import org.ta4j.core.indicators.bool.BooleanIndicator
 import org.ta4j.core.indicators.numeric.NumericIndicator
 import org.ta4j.core.num.Num
 
 class IndicatorContext private constructor(
+    private val symbol: Symbol,
     internal val timeFrame: TimeFrame,
     vararg indicators: Indicator<*>,
 ) : BarListener, Iterable<Entry<IndicatorIdentification, Indicator<*>>> {
@@ -102,7 +104,7 @@ class IndicatorContext private constructor(
             changeListeners.forEach { it.accept(bar.beginTime, key, indicator) }
         }
 
-        updateListeners.forEach { it.onContextUpdate(bar.endTime) }
+        updateListeners.forEach { it.onContextUpdate(symbol, bar.endTime) }
     }
 
     val isNotEmpty: Boolean
@@ -132,12 +134,16 @@ class IndicatorContext private constructor(
         private fun generatePlaceholderName(indicator: Indicator<*>) =
             IndicatorIdentification(UUID.randomUUID().toString(), indicator.lag)
 
-        fun of(timeFrame: TimeFrame, vararg indicators: Indicator<*>) =
-            IndicatorContext(timeFrame, *indicators)
+        fun of(symbol: Symbol, timeFrame: TimeFrame, vararg indicators: Indicator<*>) =
+            IndicatorContext(symbol, timeFrame, *indicators)
 
         @JvmStatic
-        fun empty(timeFrame: TimeFrame = TimeFrame.UNDEFINED, historyWindow: Int? = null): IndicatorContext {
-            val context = IndicatorContext(timeFrame)
+        fun empty(
+            symbol: Symbol = Symbol("UNDEFINED"),
+            timeFrame: TimeFrame = TimeFrame.UNDEFINED,
+            historyWindow: Int? = null,
+        ): IndicatorContext {
+            val context = IndicatorContext(symbol, timeFrame)
             historyWindow?.let { context.enableHistory(it) }
             return context
         }

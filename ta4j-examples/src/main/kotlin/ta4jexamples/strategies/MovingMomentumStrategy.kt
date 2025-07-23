@@ -164,7 +164,7 @@ private class MovingMomentumStrategyFactory : StrategyFactory<Strategy> {
             timeFrames = setOf(TimeFrame.DAY),
             entryRule = createEntryRule(indicatorContext, stochasticLow),
             exitRule = createExitRule(indicatorContext, stochasticHigh),
-            indicatorContext = indicatorContext
+            indicatorContexts = indicatorContexts
         )
     }
 

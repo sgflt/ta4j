@@ -23,7 +23,6 @@
 package org.ta4j.core.strategy
 
 import org.ta4j.core.TradeType
-import org.ta4j.core.indicators.IndicatorContext.Companion.empty
 import org.ta4j.core.indicators.IndicatorContexts
 import org.ta4j.core.strategy.configuration.StrategyConfiguration
 
@@ -44,7 +43,7 @@ class NOOPStrategyFactory : StrategyFactory<Strategy> {
             timeFrames = mutableSetOf(),
             entryRule = Rule.NOOP,
             exitRule = Rule.NOOP,
-            indicatorContext = empty()
+            indicatorContexts = indicatorContexts
         )
     }
 }

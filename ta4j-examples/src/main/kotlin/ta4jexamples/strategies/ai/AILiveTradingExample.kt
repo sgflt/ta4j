@@ -24,6 +24,7 @@ package ta4jexamples.strategies.ai
 
 import java.time.Instant
 import org.ta4j.core.TradeType
+import org.ta4j.core.api.series.Symbol
 import org.ta4j.core.backtest.TradingRecord
 import org.ta4j.core.backtest.criteria.MaximumDrawdownCriterion
 import org.ta4j.core.backtest.criteria.NumberOfLosingPositionsCriterion
@@ -47,7 +48,7 @@ object AILiveTradingExample {
 
     private data class TradingState(
         var tradingRecord: TradingRecord,
-        var barIndex: Int = 0
+        var barIndex: Int = 0,
     )
 
     @JvmStatic
@@ -76,14 +77,15 @@ object AILiveTradingExample {
 
         println("🔧 Initializing LiveTrading with AI Strategy...")
 
+        val symbol = Symbol("AI-Powered Bitcoin Trading")
+
         // Create indicator contexts
         val indicatorContexts = IndicatorContexts.empty().apply {
-            add(IndicatorContext.empty(timeFrame))
+            add(IndicatorContext.empty(symbol, timeFrame))
         }
 
         // Build LiveTrading instance
         val liveTrading = LiveTradingBuilder()
-            .withName("AI-Powered Bitcoin Trading")
             .withNumFactory(numFactory)
             .withStrategyFactory(strategyFactory)
             .withIndicatorContexts(indicatorContexts)
@@ -145,7 +147,7 @@ object AILiveTradingExample {
                 val entryPrice = numFactory.numOf(currentPrice)
                 val shares = numFactory.numOf(investmentAmount / currentPrice) // Calculate number of shares
                 val entered = tradingState.tradingRecord.enter(Instant.now(), entryPrice, shares)
-                
+
                 if (entered) {
                     println("🟢 ENTRY SIGNAL - Opening position at $${String.format("%.2f", currentPrice)}")
                     println("   💰 Investment: $${String.format("%.2f", investmentAmount)}")
@@ -159,21 +161,35 @@ object AILiveTradingExample {
                 val exitPrice = numFactory.numOf(currentPrice)
                 val amount = tradingState.tradingRecord.lastEntry?.amount ?: numFactory.zero()
                 val exited = tradingState.tradingRecord.exit(Instant.now(), exitPrice, amount)
-                
+
                 if (exited) {
                     val lastPosition = tradingState.tradingRecord.positions.lastOrNull()
                     val profit = lastPosition?.grossProfit?.doubleValue() ?: 0.0
-                    
+
                     if (profit > 0) {
-                        println("🟢 EXIT SIGNAL - Closing position at $${String.format("%.2f", currentPrice)} | PROFIT: $${String.format("%.2f", profit)}")
+                        println(
+                            "🟢 EXIT SIGNAL - Closing position at $${
+                                String.format(
+                                    "%.2f",
+                                    currentPrice
+                                )
+                            } | PROFIT: $${String.format("%.2f", profit)}"
+                        )
                     } else {
-                        println("🔴 EXIT SIGNAL - Closing position at $${String.format("%.2f", currentPrice)} | LOSS: $${String.format("%.2f", profit)}")
+                        println(
+                            "🔴 EXIT SIGNAL - Closing position at $${
+                                String.format(
+                                    "%.2f",
+                                    currentPrice
+                                )
+                            } | LOSS: $${String.format("%.2f", profit)}"
+                        )
                     }
-                    
+
                     println("   📊 Bar Index: ${tradingState.barIndex}")
                 }
             }
-            
+
             // Increment bar index for proper trade tracking
             tradingState.barIndex++
 
@@ -196,14 +212,14 @@ object AILiveTradingExample {
         println("\n🏁 TRADING SIMULATION COMPLETED")
         println("=====================================")
         println("📊 PERFORMANCE SUMMARY:")
-        
+
         // Use Ta4j criteria for proper calculation
         val totalPositions = NumberOfPositionsCriterion().calculate(tradingRecord).intValue()
         val winningPositions = NumberOfWinningPositionsCriterion().calculate(tradingRecord).intValue()
         val losingPositions = NumberOfLosingPositionsCriterion().calculate(tradingRecord).intValue()
         val totalReturn = ReturnCriterion().calculate(tradingRecord).doubleValue()
         val maxDrawdown = MaximumDrawdownCriterion(numFactory).calculate(tradingRecord).doubleValue()
-        
+
         println("   Total Trades: $totalPositions")
         println("   Winning Trades: $winningPositions")
         println("   Losing Trades: $losingPositions")
